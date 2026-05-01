@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Vehicles — Velour</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="../index.html">
+    VELOUR
+    <span class="logo-sub">Car Rental</span>
+  </a>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="browse.html">Browse Cars</a>
+    <a href="how.html">How It Works</a>
+    <a class="nav-btn" href="register.html">List Your Car</a>
+  </div>
+</nav>
+
+<div class="page-header-dark">
+  <div class="section-tag">Our Collection</div>
+  <h2>Available Vehicles</h2>
+  <p>All listings are uploaded by verified Velour drivers</p>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <select id="filter-cat">
+    <option value="">All Categories</option>
+    <option>Luxury Sedan</option>
+    <option>Executive SUV</option>
+    <option>Prestige Saloon</option>
+    <option>Grand Tourer</option>
+    <option>Sports</option>
+    <option>Other</option>
+  </select>
+  <select id="filter-city">
+    <option value="">All Cities</option>
+    <option>Tashkent</option>
+    <option>Samarkand</option>
+    <option>Bukhara</option>
+    <option>Namangan</option>
+    <option>Andijan</option>
+  </select>
+  <select id="filter-trans">
+    <option value="">Any Transmission</option>
+    <option>Automatic</option>
+    <option>Manual</option>
+    <option>Hybrid</option>
+    <option>Electric</option>
+  </select>
+  <select id="filter-price">
+    <option value="">Any Price</option>
+    <option value="0-80">Under $80/day</option>
+    <option value="80-130">$80–$130/day</option>
+    <option value="130-9999">$130+/day</option>
+  </select>
+</div>
+
+<div class="section">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.5rem;">
+    <div>
+      <div class="section-tag">Live Listings</div>
+      <h2>Our Collection</h2>
+    </div>
+    <div id="result-count" style="font-size:0.78rem;color:var(--text-muted);letter-spacing:1px;"></div>
+  </div>
+  <div class="cars-grid" id="cars-grid"></div>
+</div>
+
+<!-- Modal overlay for car detail -->
+<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(27,42,63,0.85);z-index:500;overflow-y:auto;padding:2rem 1rem;">
+  <div id="modal-content" style="background:var(--cream);max-width:680px;margin:0 auto;border:1px solid var(--gold);"></div>
+</div>
+
+<footer>
+  Copyright &copy; 2026 <span>VELOUR</span> Car Rental &mdash; All Rights Reserved
+</footer>
+
+<script type="module">
+  import { getCars } from '../js/store.js';
+
+  let allCars = getCars();
+  renderCars(allCars);
+
+  ['filter-cat','filter-city','filter-trans','filter-price'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+
+  function applyFilters() {
+    const cat   = document.getElementById('filter-cat').value;
+    const city  = document.getElementById('filter-city').value;
+    const trans = document.getElementById('filter-trans').value;
+    const price = document.getElementById('filter-price').value;
+
+    let filtered = allCars;
+    if (cat)   filtered = filtered.filter(c => c.category === cat);
+    if (city)  filtered = filtered.filter(c => c.city === city);
+    if (trans) filtered = filtered.filter(c => c.transmission === trans);
+    if (price) {
+      const [min, max] = price.split('-').map(Number);
+      filtered = filtered.filter(c => Number(c.rate) >= min && Number(c.rate) <= max);
+    }
+    renderCars(filtered);
+  }
+
+  function renderCars(cars) {
+    const grid = document.getElementById('cars-grid');
+    document.getElementById('result-count').textContent = `${cars.length} vehicle${cars.length !== 1 ? 's' : ''} found`;
+
+    if (cars.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <h3>No vehicles found</h3>
+          <p>No listings match your filters yet.<br>
+             <a href="register.html" style="color:var(--gold);">Be the first to list your car →</a>
+          </p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = cars.map(car => `
+      <div class="car-card" onclick="openModal('${car.id}')" style="cursor:pointer;">
+        <div class="car-img-wrap">
+          ${car.carPhotos && car.carPhotos.length > 0
+            ? `<img src="${car.carPhotos[0]}" alt="${car.brand} ${car.model}">`
+            : `<div class="car-img-placeholder"><div style="font-size:2rem;color:var(--gold);opacity:0.2;">◆</div><span style="font-family:'Playfair Display',serif;color:rgba(184,151,42,0.4);font-size:0.72rem;letter-spacing:3px;">${(car.brand||'').toUpperCase()}</span></div>`
+          }
+        </div>
+        <div class="car-body">
+          <div class="car-category">${car.category || 'Vehicle'}</div>
+          <div class="car-name">${car.brand} ${car.model}</div>
+          <div class="car-driver">
+            ${car.driverPhoto ? `<img class="driver-avatar" src="${car.driverPhoto}" alt="${car.firstName}">` : '<div class="driver-dot"></div>'}
+            ${car.firstName} ${car.lastName}
+            <span class="badge">Verified</span>
+          </div>
+          <div class="car-specs">
+            ${car.year ? `<span class="spec">${car.year}</span>` : ''}
+            ${car.transmission ? `<span class="spec">${car.transmission}</span>` : ''}
+            ${car.seats ? `<span class="spec">${car.seats} Seats</span>` : ''}
+            ${car.city ? `<span class="spec">${car.city}</span>` : ''}
+          </div>
+          <div class="car-meta">
+            <div class="car-price">$${car.rate} <span class="car-price-unit">/ day</span></div>
+            <button class="btn-sm" onclick="event.stopPropagation();openModal('${car.id}')">View & Reserve</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  window.openModal = function(id) {
+    const car = allCars.find(c => c.id === id);
+    if (!car) return;
+
+    const photos = (car.carPhotos || []).map(p =>
+      `<img src="${p}" style="width:100%;max-height:340px;object-fit:cover;display:block;">`
+    ).join('');
+
+    document.getElementById('modal-content').innerHTML = `
+      <div style="position:relative;">
+        ${photos || `<div style="height:220px;background:var(--navy);display:flex;align-items:center;justify-content:center;"><span style="font-family:'Playfair Display',serif;color:rgba(184,151,42,0.3);font-size:1rem;letter-spacing:4px;">${(car.brand||'').toUpperCase()}</span></div>`}
+        <button onclick="closeModal()" style="position:absolute;top:1rem;right:1rem;background:var(--navy);border:1px solid var(--gold);color:var(--gold-light);padding:0.3rem 0.8rem;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:0.75rem;letter-spacing:2px;">✕ CLOSE</button>
+      </div>
+      <div style="padding:2rem;">
+        <div style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;">${car.category || 'Vehicle'}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.5rem;">${car.brand} ${car.model} ${car.year ? '('+car.year+')' : ''}</div>
+
+        <div style="display:flex;align-items:center;gap:1rem;padding:1rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:1.5rem;">
+          ${car.driverPhoto ? `<img src="${car.driverPhoto}" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">` : `<div style="width:54px;height:54px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;"><span style="color:var(--gold-light);font-family:'Playfair Display',serif;">${(car.firstName||'?')[0]}</span></div>`}
+          <div>
+            <div style="font-weight:500;font-size:0.9rem;">${car.firstName} ${car.lastName}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);">${car.city || ''} · ${car.experience || '?'} years experience</div>
+            <div style="font-size:0.68rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">✓ Verified Driver</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+          <div style="background:var(--cream-dark);padding:0.8rem;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">Transmission</div>
+            <div style="font-size:0.88rem;font-weight:500;">${car.transmission || '—'}</div>
+          </div>
+          <div style="background:var(--cream-dark);padding:0.8rem;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">Seats</div>
+            <div style="font-size:0.88rem;font-weight:500;">${car.seats || '—'}</div>
+          </div>
+          <div style="background:var(--cream-dark);padding:0.8rem;text-align:center;">
+            <div style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">Colour</div>
+            <div style="font-size:0.88rem;font-weight:500;">${car.colour || '—'}</div>
+          </div>
+        </div>
+
+        ${car.description ? `<p style="font-size:0.82rem;color:var(--text-muted);line-height:1.9;margin-bottom:1.5rem;">${car.description}</p>` : ''}
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border);">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--crimson);">$${car.rate} <span style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-muted);font-weight:400;">/ day</span></div>
+          <a href="mailto:?subject=Reserve ${car.brand} ${car.model} on Velour" class="btn-primary">Enquire to Reserve</a>
+        </div>
+      </div>`;
+
+    document.getElementById('modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeModal = function() {
+    document.getElementById('modal').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velour — Premium Car Rental</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    VELOUR
+    <span class="logo-sub">Car Rental</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="pages/browse.html">Browse Cars</a>
+    <a href="pages/how.html">How It Works</a>
+    <a class="nav-btn" href="pages/register.html">List Your Car</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">Premium Car Rental Network</div>
+    <h1>Drive in <em>Distinction.</em><br>Arrive in Style.</h1>
+    <p class="hero-sub">Where discerning drivers meet those who appreciate the finest journeys.</p>
+    <div class="divider"></div>
+    <div class="hero-btns">
+      <a class="btn-primary" href="pages/browse.html">Browse Vehicles</a>
+      <a class="btn-outline-light" href="pages/register.html">Register as Driver</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num" id="stat-drivers">0</div>
+        <div class="stat-label">Verified Drivers</div>
+      </div>
+      <div>
+        <div class="stat-num" id="stat-cars">0</div>
+        <div class="stat-label">Listed Vehicles</div>
+      </div>
+      <div>
+        <div class="stat-num">42</div>
+        <div class="stat-label">Cities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE OFFER -->
+<div style="background:var(--cream-dark);padding:4rem 3rem;text-align:center;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="section-tag">The Velour Standard</div>
+    <h2 class="serif" style="font-size:2.2rem;margin-bottom:0.8rem;">Luxury. Vetted. Yours.</h2>
+    <p style="color:var(--text-muted);font-size:0.85rem;line-height:2;max-width:560px;margin:0 auto 3rem;">Every vehicle on Velour passes our white-glove inspection. Every driver is personally verified. This is not merely a rental — it is an experience curated for those with taste.</p>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-num">I</div>
+        <div class="how-title">Discover</div>
+        <div class="how-desc">Browse an exclusive collection of premium vehicles, filtered by city, category, and occasion.</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">II</div>
+        <div class="how-title">Reserve</div>
+        <div class="how-desc">Select your dates and connect with the driver directly. Transparent pricing, no hidden fees.</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">III</div>
+        <div class="how-title">Experience</div>
+        <div class="how-desc">Your driver arrives immaculately presented. The vehicle, pristine. The journey, memorable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<div class="section">
+  <div class="section-tag">Featured Vehicles</div>
+  <h2>Handpicked for Excellence</h2>
+  <p class="section-sub">Real listings uploaded by our verified drivers — available now.</p>
+  <div class="cars-grid" id="featured-grid">
+    <!-- filled by JS -->
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a class="btn-outline" href="pages/browse.html">View All Vehicles →</a>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <div class="section-tag">For Drivers</div>
+  <h2>Earn with Your Vehicle<br>on Your Schedule</h2>
+  <p>Join our exclusive network of professional drivers. Register your vehicle, set your rate, and connect with discerning clients.</p>
+  <a class="btn-primary" href="pages/register.html">Register as Driver</a>
+</div>
+
+<footer>
+  Copyright &copy; 2026 <span>VELOUR</span> Car Rental &mdash; All Rights Reserved
+</footer>
+
+<script type="module">
+  import { getCars } from './js/store.js';
+
+  const cars = getCars();
+  const featured = cars.slice(-3).reverse();
+
+  // update stats
+  document.getElementById('stat-drivers').textContent = cars.length;
+  document.getElementById('stat-cars').textContent = cars.length;
+
+  const grid = document.getElementById('featured-grid');
+
+  if (featured.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <h3>No vehicles listed yet</h3>
+        <p>Be the first to list your premium vehicle.<br>
+           <a href="pages/register.html" style="color:var(--gold);">Register as a driver →</a>
+        </p>
+      </div>`;
+  } else {
+    grid.innerHTML = featured.map(car => buildCard(car)).join('');
+  }
+
+  function buildCard(car) {
+    const imgHTML = car.carPhotos && car.carPhotos.length > 0
+      ? `<img src="${car.carPhotos[0]}" alt="${car.brand} ${car.model}">`
+      : `<div class="car-img-placeholder"><div style="font-size:2rem;color:var(--gold);opacity:0.2;">◆</div><span>${(car.brand||'').toUpperCase()}</span></div>`;
+
+    const driverImg = car.driverPhoto
+      ? `<img class="driver-avatar" src="${car.driverPhoto}" alt="${car.firstName}">`
+      : `<div class="driver-dot"></div>`;
+
+    return `
+    <div class="car-card">
+      <div class="car-img-wrap">${imgHTML}</div>
+      <div class="car-body">
+        <div class="car-category">${car.category || 'Vehicle'}</div>
+        <div class="car-name">${car.brand} ${car.model}</div>
+        <div class="car-driver">${driverImg} ${car.firstName} ${car.lastName} <span class="badge">Verified</span></div>
+        <div class="car-specs">
+          ${car.year ? `<span class="spec">${car.year}</span>` : ''}
+          ${car.transmission ? `<span class="spec">${car.transmission}</span>` : ''}
+          ${car.seats ? `<span class="spec">${car.seats} Seats</span>` : ''}
+          ${car.city ? `<span class="spec">${car.city}</span>` : ''}
+        </div>
+        <div class="car-meta">
+          <div class="car-price">$${car.rate} <span class="car-price-unit">/ day</span></div>
+          <a class="btn-sm" href="pages/browse.html">Reserve</a>
+        </div>
+      </div>
+    </div>`;
+  }
+</script>
+</body>
+</html>

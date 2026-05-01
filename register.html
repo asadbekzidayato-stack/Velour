@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register as Driver — Velour</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="../index.html">
+    VELOUR
+    <span class="logo-sub">Car Rental</span>
+  </a>
+  <div class="nav-links">
+    <a href="../index.html">Home</a>
+    <a href="browse.html">Browse Cars</a>
+    <a href="how.html">How It Works</a>
+    <a class="nav-btn" href="register.html">List Your Car</a>
+  </div>
+</nav>
+
+<div class="page-header-dark">
+  <div class="section-tag">Driver Portal</div>
+  <h2>Join the Velour Network</h2>
+  <p>Register your vehicle and connect with premium clientele</p>
+</div>
+
+<div class="form-wrap">
+
+  <!-- STEP TABS -->
+  <div class="steps">
+    <button class="step-tab active" id="tab-1">① Personal</button>
+    <button class="step-tab" id="tab-2">② Vehicle</button>
+    <button class="step-tab" id="tab-3">③ Photos</button>
+    <button class="step-tab" id="tab-4">④ Review</button>
+  </div>
+
+  <!-- ── STEP 1: Personal ── -->
+  <div class="form-step active" id="step-1">
+    <div class="step-title">Personal Information</div>
+    <div class="step-sub">Your identity as a verified Velour driver</div>
+
+    <div class="field-row">
+      <div class="field"><label>First Name *</label><input id="f-fname" type="text" placeholder="Alisher" required></div>
+      <div class="field"><label>Last Name *</label><input id="f-lname" type="text" placeholder="Nazarov" required></div>
+    </div>
+    <div class="field"><label>Email Address *</label><input id="f-email" type="email" placeholder="your@email.com" required></div>
+    <div class="field"><label>Phone Number *</label><input id="f-phone" type="tel" placeholder="+998 90 000 0000" required></div>
+    <div class="field-row">
+      <div class="field">
+        <label>City *</label>
+        <select id="f-city" required>
+          <option value="">Select city...</option>
+          <option>Tashkent</option><option>Samarkand</option><option>Bukhara</option>
+          <option>Namangan</option><option>Andijan</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Driver's Licence No. *</label><input id="f-licence" type="text" placeholder="AA0000000" required></div>
+    </div>
+    <div class="field"><label>Years of Experience *</label><input id="f-exp" type="number" placeholder="5" min="1" max="60" required></div>
+
+    <div class="form-nav">
+      <div></div>
+      <button class="btn-next" onclick="nextStep(1)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Vehicle ── -->
+  <div class="form-step" id="step-2">
+    <div class="step-title">Vehicle Details</div>
+    <div class="step-sub">Tell us about the vehicle you will be listing</div>
+
+    <div class="field-row">
+      <div class="field"><label>Brand / Make *</label><input id="f-brand" type="text" placeholder="Mercedes-Benz" required></div>
+      <div class="field"><label>Model *</label><input id="f-model" type="text" placeholder="S-Class S580" required></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Year *</label><input id="f-year" type="number" placeholder="2023" min="2000" max="2026" required></div>
+      <div class="field"><label>Colour</label><input id="f-colour" type="text" placeholder="Obsidian Black"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Plate Number</label><input id="f-plate" type="text" placeholder="01 A 000 AA"></div>
+      <div class="field">
+        <label>Number of Seats</label>
+        <select id="f-seats">
+          <option>2</option><option>4</option><option selected>5</option>
+          <option>6</option><option>7</option><option>8</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Transmission</label>
+        <select id="f-trans">
+          <option>Automatic</option><option>Manual</option>
+          <option>Hybrid</option><option>Electric</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="f-cat">
+          <option>Luxury Sedan</option><option>Executive SUV</option>
+          <option>Prestige Saloon</option><option>Grand Tourer</option>
+          <option>Sports</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Daily Rate (USD) *</label><input id="f-rate" type="number" placeholder="120" min="10" required></div>
+    <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Describe your vehicle and the experience you offer to clients..."></textarea></div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="prevStep(2)">← Back</button>
+      <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Photos ── -->
+  <div class="form-step" id="step-3">
+    <div class="step-title">Upload Photos</div>
+    <div class="step-sub">High-quality images build trust with clients</div>
+
+    <div class="field" style="margin-bottom:2rem;">
+      <label>Vehicle Photos <span style="text-transform:none;letter-spacing:0;color:var(--text-muted)">(at least 1 photo)</span></label>
+      <div class="upload-zone" id="car-zone" onclick="document.getElementById('car-upload').click()">
+        <div class="upload-icon">◈</div>
+        <p><strong>Click to upload vehicle photos</strong><br>
+        Exterior front, rear, interior &amp; engine bay<br>
+        <small>JPG or PNG — max 5 MB each</small></p>
+        <input type="file" id="car-upload" multiple accept="image/jpeg,image/png,image/webp" style="display:none">
+      </div>
+      <div class="img-previews" id="car-previews"></div>
+    </div>
+
+    <div class="field">
+      <label>Your Portrait Photo <span style="text-transform:none;letter-spacing:0;color:var(--text-muted)">(clear face, professional)</span></label>
+      <div class="upload-zone" id="driver-zone" onclick="document.getElementById('driver-upload').click()">
+        <div class="upload-icon">◉</div>
+        <p><strong>Click to upload your photo</strong><br>
+        Professional headshot, plain background preferred<br>
+        <small>JPG or PNG — max 3 MB</small></p>
+        <input type="file" id="driver-upload" accept="image/jpeg,image/png,image/webp" style="display:none">
+      </div>
+      <div class="img-previews" id="driver-preview"></div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="prevStep(3)">← Back</button>
+      <button class="btn-next" onclick="nextStep(3)">Review Listing →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Review ── -->
+  <div class="form-step" id="step-4">
+    <div class="step-title">Review &amp; Submit</div>
+    <div class="step-sub">Confirm your details before submitting for verification</div>
+
+    <div class="review-box">
+      <div class="review-box-label">Driver Profile</div>
+      <div class="review-grid" id="review-personal"></div>
+    </div>
+    <div class="review-box">
+      <div class="review-box-label">Vehicle Details</div>
+      <div class="review-grid" id="review-vehicle"></div>
+    </div>
+    <div style="background:var(--cream-dark);border:1px solid var(--border);padding:1rem;font-size:0.78rem;color:var(--text-muted);line-height:1.9;margin-bottom:1.5rem;">
+      By submitting you confirm all information is accurate. Your listing will be visible on the Browse page immediately after submission.
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-back" onclick="prevStep(4)">← Back</button>
+      <button class="btn-submit" onclick="submitListing()">Submit Listing ✓</button>
+    </div>
+  </div>
+
+  <!-- ── SUCCESS ── -->
+  <div class="success-wrap" id="success-box">
+    <div class="success-circle">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="5,15 13,23 25,8" stroke="#D4AF55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3>Listing Published</h3>
+    <p>Your vehicle is now live on the Velour platform.<br>
+       Clients can browse and reserve your car immediately.</p>
+    <div class="divider"></div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+      <a class="btn-primary" href="browse.html">View My Listing</a>
+      <a class="btn-outline" href="../index.html">Return Home</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  Copyright &copy; 2026 <span>VELOUR</span> Car Rental &mdash; All Rights Reserved
+</footer>
+
+<script type="module">
+  import { saveCar } from '../js/store.js';
+
+  /* ── state ── */
+  let currentStep = 1;
+  const carPhotosB64  = [];
+  let   driverPhotoB64 = '';
+
+  /* ── photo file → base64 ── */
+  function fileToB64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload  = e => res(e.target.result);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+  }
+
+  /* ── car photo upload ── */
+  document.getElementById('car-upload').addEventListener('change', async function() {
+    carPhotosB64.length = 0;
+    const prev = document.getElementById('car-previews');
+    prev.innerHTML = '';
+    for (const file of this.files) {
+      const b64 = await fileToB64(file);
+      carPhotosB64.push(b64);
+      const img = document.createElement('img');
+      img.src = b64;
+      prev.appendChild(img);
+    }
+    document.getElementById('car-zone').style.borderColor = carPhotosB64.length ? 'var(--gold)' : '';
+  });
+
+  /* ── driver photo upload ── */
+  document.getElementById('driver-upload').addEventListener('change', async function() {
+    if (!this.files[0]) return;
+    driverPhotoB64 = await fileToB64(this.files[0]);
+    const prev = document.getElementById('driver-preview');
+    prev.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = driverPhotoB64;
+    prev.appendChild(img);
+    document.getElementById('driver-zone').style.borderColor = 'var(--gold)';
+  });
+
+  /* ── step navigation ── */
+  window.nextStep = function(n) {
+    if (!validateStep(n)) return;
+    if (n === 3) buildReview();
+    goStep(n + 1);
+  };
+  window.prevStep = function(n) { goStep(n - 1); };
+
+  function goStep(n) {
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    document.querySelectorAll('.step-tab').forEach((t, i) => {
+      t.classList.remove('active', 'done');
+      if (i + 1 === n) t.classList.add('active');
+      else if (i + 1 < n) t.classList.add('done');
+    });
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validateStep(n) {
+    const required = document.querySelectorAll(`#step-${n} [required]`);
+    for (const el of required) {
+      if (!el.value.trim()) {
+        el.style.borderColor = 'var(--crimson)';
+        el.focus();
+        showToast('Please fill in all required fields.');
+        setTimeout(() => el.style.borderColor = '', 2000);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function val(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+  function buildReview() {
+    const rp = document.getElementById('review-personal');
+    rp.innerHTML = [
+      ['Name',       `${val('f-fname')} ${val('f-lname')}`],
+      ['Email',      val('f-email')],
+      ['Phone',      val('f-phone')],
+      ['City',       val('f-city')],
+      ['Licence',    val('f-licence')],
+      ['Experience', val('f-exp') + ' years'],
+    ].map(([l,v]) => `<div><div class="review-field-label">${l}</div><div>${v||'—'}</div></div>`).join('');
+
+    const rv = document.getElementById('review-vehicle');
+    rv.innerHTML = [
+      ['Vehicle',      `${val('f-brand')} ${val('f-model')}`],
+      ['Year',         val('f-year')],
+      ['Colour',       val('f-colour')],
+      ['Plate',        val('f-plate')],
+      ['Category',     val('f-cat')],
+      ['Transmission', val('f-trans')],
+      ['Seats',        val('f-seats')],
+      ['Daily Rate',   `$${val('f-rate')}`],
+    ].map(([l,v]) => `<div><div class="review-field-label">${l}</div><div>${v||'—'}</div></div>`).join('');
+  }
+
+  window.submitListing = function() {
+    const car = {
+      firstName:   val('f-fname'),
+      lastName:    val('f-lname'),
+      email:       val('f-email'),
+      phone:       val('f-phone'),
+      city:        val('f-city'),
+      licence:     val('f-licence'),
+      experience:  val('f-exp'),
+      brand:       val('f-brand'),
+      model:       val('f-model'),
+      year:        val('f-year'),
+      colour:      val('f-colour'),
+      plate:       val('f-plate'),
+      seats:       val('f-seats'),
+      transmission:val('f-trans'),
+      category:    val('f-cat'),
+      rate:        val('f-rate'),
+      description: val('f-desc'),
+      carPhotos:   [...carPhotosB64],
+      driverPhoto: driverPhotoB64,
+    };
+
+    saveCar(car);
+
+    /* hide form, show success */
+    document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+    document.querySelector('.steps').style.display = 'none';
+    document.getElementById('success-box').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
